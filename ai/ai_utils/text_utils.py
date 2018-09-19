@@ -1,6 +1,7 @@
 from pyvi import ViTokenizer
 import numpy as np
 from operator import itemgetter
+import data_utils as data_utils
 pt= re.compile(r"_")
 def segmentation(text):
     return ViTokenizer.tokenize(text)
@@ -23,7 +24,7 @@ def get_normal_word(text):
         list.append(sentence)
     return list
 def remove_stop_word(list):
-    df = pd.read_excel('stopword.xlsx', sheetname='Sheet1', encoding="UTF-8")
+    df = data_utils.read_excel('stopword.xlsx', sheetname='Sheet1', encoding="UTF-8")
     list2 = []
     for item in df.index:
         list2.append(df['stop'][item])
