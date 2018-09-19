@@ -1,5 +1,6 @@
 from pyvi import ViTokenizer
 import numpy as np
+import re
 from operator import itemgetter
 import data_utils as data_utils
 pt= re.compile(r"_")
