@@ -8,3 +8,7 @@
         for item in df.index:
             training_data[tags[df['label'][item]]].append(df['content'][item])
         return training_data
+    def read_exel(exel_file,exel_sheet):
+        df=pd.read_excel(excel_file, sheetname=excel_sheet, encoding="UTF-8")
+        return df
+        
