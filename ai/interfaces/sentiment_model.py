@@ -42,10 +42,9 @@ class MLP(object):
         current_model = {"feature_gen": current_feature_gen, "clf": current_clf}
         return current_model
 
-
     def train_clf(self, excel_file, excel_sheet="Sheet1"):
         self.tag_model = {}
-        training_data = load_excel_training_data(excel_file, excel_sheet)
+        training_data = self.load_excel_training_data(excel_file, excel_sheet)
         testing_data={}
         # print(training_data)
         for tag in training_data:
@@ -72,71 +71,45 @@ class MLP(object):
             # print(curr_clf.predict(texts))
             self.tag_model[tag] = curr_clf
             print(tag)
-            # print(self.tag_model[tag]['clf'])
-        test_data=[]
-        test_label=[]
-        corect={}
+        return (self.tag_model)
+    
+    def predict(self,sentences):
         score={}
-        label_predict={}
-        for index in tags:
-            label_predict[tags[index]]=[]
-        for tag in testing_data:
-
-            # print(len(testing_data[tag]))
-            test_data+=testing_data[tag]
-            for item in testing_data[tag]:
-                test_label.append(tag)
-        print(len(test_data),len(test_label))
-        print(test_label)
-        for tag in testing_data:
-            # print(tag)
-            corect[tag]=self.tag_model[tag]['clf'].predict(self.tag_model[tag]['feature_gen'].transform(test_data))
-            score[tag]=self.tag_model[tag]['clf'].predict_proba(self.tag_model[tag]['feature_gen'].transform(test_data))
-            score[tag]=np.amax(score[tag],axis=1)
-            print(score[tag].shape)
+        corect = {}
+        for tag in ['positive', 'negative', 'neutral']:
+            corect[tag]=[]
+            score[tag]=[]
+        for tag in ['positive','negative','neutral']:
+            corect[tag] = self.tag_model[tag]['clf'].predict(self.tag_model[tag]['feature_gen'].transform([sentences]))
+            # print(self.tag_model[tag]['clf'].predict(self.tag_model[tag]['feature_gen'].transform(['doanh thu tăng nhẹ so với tháng trước'])))
+            score[tag] = self.tag_model[tag]['clf'].predict_proba(self.tag_model[tag]['feature_gen'].transform([sentences]))
+            print(score[tag])
+            score[tag] = np.amax(score[tag],axis=1)
+        # print(score)
         print(corect)
-        print(score)
-        # print(corect['negative'][0])
-        for i in range(68):
-            tag1=''
-            tag2=''
-            tag3=''
-            a=max(score['positive'][i],score['neutral'][i],score['negative'][i])
-            if score['positive'][i]==a:tag1='positive'
-            if score['negative'][i] == a: tag1 = 'negative'
-            if score['neutral'][i] == a: tag1 = 'neutral'
-            b=min(score['positive'][i],score['neutral'][i],score['negative'][i])
-            if score['negative'][i]==b:tag3='negative'
-            if score['neutral'][i] == b: tag3 = 'neutral'
-            if score['positive'][i] == b: tag3 = 'positive'
-            if (tag1 == 'positive')& (tag3 == 'negative'):tag2 = 'neutral'
-            if (tag1 == 'positive') & (tag3 == 'neutral'): tag2 = 'negative'
-            if (tag1 == 'negative') & (tag3 == 'neutral'): tag2 = 'positive'
-            if (tag1 == 'negative') & (tag3 == 'positive'): tag2 = 'neutral'
-            if (tag1 == 'neutral') & (tag3 == 'negative'): tag2 = 'positive'
-            if (tag1 == 'neutral') & (tag3 == 'positive'): tag2 = 'negative'
-            print(tag1,tag2,tag3)
-            if corect[tag1][i]!='other':
-                label_predict[test_label[i]].append(corect[tag1][i])
-                continue
-            if corect[tag2][i]!='other':
-                label_predict[test_label[i]].append(corect[tag2][i])
-                continue
-            if corect[tag3][i]!='other':
-                label_predict[test_label[i]].append(corect[tag3][i])
-                continue
-            label_predict['neutral'].append('neutral')
 
-        print(label_predict)
-        fail=0
-        for tag in label_predict:
-            sum = 0
-            for item in label_predict[tag]:
-                if item==tag:sum+=1
-                if item!=tag:fail+=1
-            print("acc of ", tag ,": ", sum/len(label_predict[tag]))
-        print("average : ", (68-fail)/68)
-        print(68-fail)
-        # print(label_predict)
-        for tag in label_predict:
-            print(self.tag_model[tag]['clf'].predict(self.tag_model[tag]['feature_gen'].transform(['công ty phát triển chậm'])))
+        a = max(score['positive'][0], score['neutral'][0], score['negative'][0])
+        if score['positive'][0] == a: tag1 = 'positive'
+        if score['negative'][0] == a: tag1 = 'negative'
+        if score['neutral'][0] == a: tag1 = 'neutral'
+        b = min(score['positive'][0], score['neutral'][0], score['negative'][0])
+        if score['negative'][0] == b: tag3 = 'negative'
+        if score['neutral'][0] == b: tag3 = 'neutral'
+        if score['positive'][0] == b: tag3 = 'positive'
+        if (tag1 == 'positive') & (tag3 == 'negative'): tag2 = 'neutral'
+        if (tag1 == 'positive') & (tag3 == 'neutral'): tag2 = 'negative'
+        if (tag1 == 'negative') & (tag3 == 'neutral'): tag2 = 'positive'
+        if (tag1 == 'negative') & (tag3 == 'positive'): tag2 = 'neutral'
+        if (tag1 == 'neutral') & (tag3 == 'negative'): tag2 = 'positive'
+        if (tag1 == 'neutral') & (tag3 == 'positive'): tag2 = 'negative'
+        print(tag1, tag2, tag3)
+        if corect[tag1][0] != 'other':
+            return corect[tag1][0]
+        if corect[tag2][0] != 'other':
+            return corect[tag2][0]
+        if corect[tag3][0] != 'other':
+            return corect[tag3][0]
+        return 'neutral' 
+    
+    
+   
