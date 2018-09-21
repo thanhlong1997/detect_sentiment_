@@ -1,6 +1,7 @@
 import copy
 from sklearn.neural_network import MLPClassifier
 from sklearn.feature_extraction.text import CountVectorizer
+import pandas as pd
 from ai.ai_utils import text_utils
 def select_feature(trainning_set, tag):
     vocabulary = {}
@@ -18,7 +19,7 @@ def select_feature(trainning_set, tag):
     features = [(key, value) for (key, value) in heapq.nlargest(number, vocabulary.items(), key=itemgetter(1))]
     return features
 def train_vectorizer(vocabulary, corpus):
-    cou_vec = CountVectorizer(encoding='utf-8', tokenizer=get_normal_word, vocabulary=vocabulary)
+    cou_vec = CountVectorizer(encoding='utf-8', tokenizer=text_utils.get_normal_word, vocabulary=vocabulary)
     cou_vec.fit(corpus)
     return cou_vec    
 def build_vocab(list1,list2):
@@ -34,7 +35,7 @@ def build_vocabulary(training_data):
     vocab=[]
     for tag in training_data:
         print(len(training_data[tag]))
-        for item in self.select_feature(training_data,tag):
+        for item in select_feature(training_data,tag):
             if vocab.count(item[0])<=0:vocab.append(item[0])
     corpus=[]
     df = pd.read_excel('data.xlsx', sheetname='Sheet1', encoding="UTF-8")
