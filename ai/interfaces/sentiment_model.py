@@ -42,8 +42,8 @@ class Classifier(object):
 
     def predict_tag(self, tag, text):
         vector= self.tag_model[tag]['feature_gen'].transform([text])
-        pred = self.tag_model[tag]['first_level']['clf'].predict(vector)[0]
-        prob = max(self.tag_model[tag]['first_level']['clf'].predict_proba(vector)[0])
+        pred = self.tag_model[tag]['clf'].predict(vector)[0]
+        prob = max(self.tag_model[tag]['clf'].predict_proba(vector)[0])
         if pred == 'other':
             return 0
         return prob
@@ -52,10 +52,10 @@ class Classifier(object):
         max_prob=0
         pred="positive"
         for tag in tags:
-            prob= self.predict_tag(tag, text)
+            prob= self.predict_tag(tags[tag], text)
             if prob > max_prob:
                 max_prob= prob
-                pred= tag
+                pred= tags[tag]
         return pred
 
     def predict_test_data(self,testing_data):
@@ -68,9 +68,10 @@ class Classifier(object):
             sum[tag]=0
         for i in range(len(test_data)):
             predicted_tag= self.predict(test_data[i])
-            if predicted_tag == test_data[i]:
+            if predicted_tag == test_label[i]:
                 sum['average']+=1
                 sum[predicted_tag]+=1
+            print("sentence: ", test_data[i], " -- pred : ", predicted_tag)
         print("average acc: ", sum['average']/len(test_data))
         for tag in tags:
-            print(tag," acc: ", sum[tag]/len(testing_data[tag]))
+            print(tag," acc: ", sum[tags[tag]]/len(testing_data[tags[tag]]))

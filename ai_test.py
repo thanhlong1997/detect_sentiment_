@@ -1,7 +1,7 @@
 from ai.interfaces.sentiment_model import Classifier
+from ai.algorithms.text_classification import data_path
 
 
-data_path= "D:\\ITSOL\\detect_sentiment_\\storage\\data\\data.xlsx"
 model_path= "D:\\ITSOL\\detect_sentiment_\\storage\\model\\sentiment_model.pkl"
 
 classifier= Classifier()

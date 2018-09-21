@@ -34,7 +34,7 @@ def read_stopword(file):
         list2.append(df['stop'][item])
     return list2
 
-stopwords= read_stopword("stopword.xlsx")
+stopwords= read_stopword("D:\\ITSOL\\detect_sentiment_\\storage\\data\stopword.xlsx")
 
 def remove_stop_word(list):
     for item in list:
