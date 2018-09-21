@@ -73,7 +73,7 @@ class MLP(object):
             # print(curr_clf.predict(texts))
             self.tag_model[tag] = curr_clf
             print(tag)
-        filename = 'finalized_model.sav'
+        filename = 'storage/model/finalized_model.sav'
         pickle.dump(self.tag_model, open(filename, 'wb'))
         loaded_model = pickle.load(open(filename, 'rb'))
         print(self.predict_test_data(testing_data))
