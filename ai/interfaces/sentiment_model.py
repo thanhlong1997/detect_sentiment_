@@ -151,3 +151,42 @@ class MLP(object):
 
             print("acc of ", tag, ": ", sum / len(label_predict[tag]))
         print("acc :----",(total-fail)/total)
+    
+def predict(sentences):
+    score = {}
+    corect = {}
+    model = pickle.load(open("finalized_model.sav", 'rb'))
+    for tag in ['positive', 'negative', 'neutral']:
+        corect[tag] = []
+        score[tag] = []
+    for tag in ['positive', 'negative', 'neutral']:
+        corect[tag] = model[tag]['clf'].predict(model[tag]['feature_gen'].transform([sentences]))
+        # print(self.tag_model[tag]['clf'].predict(self.tag_model[tag]['feature_gen'].transform(['doanh thu tăng nhẹ so với tháng trước'])))
+        score[tag] = model[tag]['clf'].predict_proba(model[tag]['feature_gen'].transform([sentences]))
+        print(score[tag])
+        score[tag] = np.amax(score[tag], axis=1)
+    # print(score)
+    print(corect)
+
+    a = max(score['positive'][0], score['neutral'][0], score['negative'][0])
+    if score['positive'][0] == a: tag1 = 'positive'
+    if score['negative'][0] == a: tag1 = 'negative'
+    if score['neutral'][0] == a: tag1 = 'neutral'
+    b = min(score['positive'][0], score['neutral'][0], score['negative'][0])
+    if score['negative'][0] == b: tag3 = 'negative'
+    if score['neutral'][0] == b: tag3 = 'neutral'
+    if score['positive'][0] == b: tag3 = 'positive'
+    if (tag1 == 'positive') & (tag3 == 'negative'): tag2 = 'neutral'
+    if (tag1 == 'positive') & (tag3 == 'neutral'): tag2 = 'negative'
+    if (tag1 == 'negative') & (tag3 == 'neutral'): tag2 = 'positive'
+    if (tag1 == 'negative') & (tag3 == 'positive'): tag2 = 'neutral'
+    if (tag1 == 'neutral') & (tag3 == 'negative'): tag2 = 'positive'
+    if (tag1 == 'neutral') & (tag3 == 'positive'): tag2 = 'negative'
+    print(tag1, tag2, tag3)
+    if corect[tag1][0] != 'other':
+        return corect[tag1][0]
+    if corect[tag2][0] != 'other':
+        return corect[tag2][0]
+    if corect[tag3][0] != 'other':
+        return corect[tag3][0]
+    return 'neutral'    
