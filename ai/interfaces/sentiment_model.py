@@ -75,3 +75,5 @@ class Classifier(object):
         print("average acc: ", sum['average']/len(test_data))
         for tag in tags:
             print(tag," acc: ", sum[tags[tag]]/len(testing_data[tags[tag]]))
+            print("correct: ", sum[tags[tag]]," - - Total: ", len(testing_data[tags[tag]]))
+            print("- - - - - - - - - - - -")

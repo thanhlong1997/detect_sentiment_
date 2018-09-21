@@ -7,7 +7,7 @@ import heapq
 import numpy as np
 from ai.ai_utils.text_utils import get_normal_word, remove_stop_word
 
-num_features_tag={'positive':50, 'negative':30,'neutral':40}
+num_features_tag={'positive':150, 'negative':100,'neutral':120}
 data_path= "D:\\ITSOL\\detect_sentiment_\\storage\\data\\data.xlsx"
 
 def train_vectorizer(vocabulary, corpus):
