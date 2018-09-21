@@ -2,10 +2,11 @@ from pyvi import ViTokenizer
 import numpy as np
 import re
 from operator import itemgetter
-import data_utils as data_utils
+from ai.ai_utils.data_utils import read_excel
 pt= re.compile(r"_")
 def segmentation(text):
     return ViTokenizer.tokenize(text)
+
 def split_words(text):
     text = segmentation(text)
     try:
@@ -16,6 +17,7 @@ def split_words(text):
 def get_words_feature(text):
     split_word = split_words(text)
     return [word for word in split_word if word.encode('utf-8')]
+
 def get_normal_word(text):
     get_words_featur=get_words_feature(text)
     list=[]
@@ -24,13 +26,18 @@ def get_normal_word(text):
         sentence = re.sub(pt, " ", item)
         list.append(sentence)
     return list
-def remove_stop_word(list):
-    df = data_utils.read_excel('stopword.xlsx', sheetname='Sheet1', encoding="UTF-8")
+
+def read_stopword(file):
+    df = read_excel(file)
     list2 = []
     for item in df.index:
         list2.append(df['stop'][item])
-    for item in list:
-        if item in list2:list.remove(item)
-    # print(list2)
+    return list2
 
+stopwords= read_stopword("stopword.xlsx")
+
+def remove_stop_word(list):
+    for item in list:
+        if item in stopwords:
+            list.remove(item)
     return list    
