@@ -1,10 +1,11 @@
 import copy
 from sklearn.neural_network import MLPClassifier
 from sklearn.feature_extraction.text import CountVectorizer
+from ai.ai_utils import text_utils
 def select_feature(trainning_set, tag):
     vocabulary = {}
     for sentence in trainning_set[tag]:
-        sentence_tokenized = remove_stop_word(get_normal_word(sentence))
+        sentence_tokenized = text_utils.remove_stop_word(text_ultis.get_normal_word(sentence))
         for term in sentence_tokenized:
             if term not in vocabulary:
                vocabulary[term] = 1
