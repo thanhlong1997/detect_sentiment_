@@ -1,6 +1,8 @@
 import copy
 from sklearn.neural_network import MLPClassifier
 from sklearn.feature_extraction.text import CountVectorizer
+import pandas as pd
+from ai.ai_utils import data_utils
 tags={1:'positive', 0:'neutral', -1:'negative'}
 class MLP(object):
     def train_MLP_title_prediction(self,tag, vectorizer, correct_titles, other_titles, MLP_structure=[64, 16]):
@@ -44,7 +46,7 @@ class MLP(object):
 
     def train_clf(self, excel_file, excel_sheet="Sheet1"):
         self.tag_model = {}
-        training_data = self.load_excel_training_data(excel_file, excel_sheet)
+        training_data = data_utils.load_excel_training_data(excel_file, excel_sheet)
         testing_data={}
         # print(training_data)
         for tag in training_data:
